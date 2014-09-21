@@ -1,0 +1,83 @@
+<html>	
+	<head>
+		<script>
+			var desplaz=1;
+
+			//Descifra
+			function decodeTxt(s){
+				var s1=unescape(s.substr(0,s.length-1));
+				var t='';
+				for(i=0;i<s1.length;i++)
+					t+=String.fromCharCode(s1.charCodeAt(i)-s.substr(s.length-1,1));
+				return unescape(t);
+			}
+
+			//Cifra todo el texto (en formato unicode) y escapa la salida
+			function encodeTxt(s){
+				s=escape(s);
+				var ta=new Array();
+				for(i=0;i<s.length;i++)
+					ta[i]=s.charCodeAt(i)+desplaz;
+				return ""+escape(eval("String.fromCharCode("+ta+")"))+desplaz;
+			}
+
+
+			//separar
+			function escapeTxt(os){
+				var ns='';
+				var t;
+				var chr='';
+				var cc='';
+				var tn='';
+				for(i=0;i<256;i++){
+					tn=i.toString(16);
+					if(tn.length<2)tn="0"+tn;
+					cc+=tn;
+					chr+=unescape('%'+tn);
+				}
+				cc=cc.toUpperCase();
+				os.replace(String.fromCharCode(13)+'',"%13");
+				for(q=0;q<os.length;q++){
+					t=os.substr(q,1);
+					for(i=0;i<chr.length;i++){
+						if(t==chr.substr(i,1)){
+							t=t.replace(chr.substr(i,1),"%"+cc.substr(i*2,2));
+							i=chr.length;
+						}
+					}
+				ns+=t;
+				}
+				return ns;
+			}
+		</script>
+
+	</head>
+
+	<body>
+
+	<h1>cifrado entrega tarde<h1>
+	<h2>codificado y decodificado (Cifrado Cesar)</h2>
+	<br />
+	<form>
+	<table>
+	<tr>
+		<td>Desplazamiento:</td>
+		<td> <input type="text" value=1 onchange="desplaz=parseInt(this.value)" /></td>
+	</tr>
+	<tr>
+		<td>texto</td><td><textarea id="txt_claro">Texto en claro</textarea></td>
+		<td>cifrado</td><td><textarea id="txt_cifrado">Texto cifrado</textarea></td>
+	</tr>
+	<tr>
+	<td><input type="button" value="Cifrar" onclick="document.getElementById('txt_cifrado').value=encodeTxt(document.getElementById('txt_claro').value)" /></td>
+	<td><input type="button" value="Descifrar" onclick="document.getElementById('txt_claro').value=decodeTxt(document.getElementById('txt_cifrado').value)" /></td>
+	</tr>
+	</table>
+	</form>
+
+
+	</p>
+
+	</body>
+
+</html>
